@@ -146,10 +146,10 @@ module.exports = class IncludeDependencies {
   getDependencies(fileName, patterns, useCache = false) {
     const servicePath = this.serverless.config.servicePath;
     const dependencies = getDependencyList(fileName, this.serverless, useCache && this.cache) || [];
-    const relativeDependencies = dependencies.map(p => path.relative(servicePath, p)).filter(p => !p.startsWith('../node_modules'));
+    const relativeDependencies = dependencies.map(p => path.relative(servicePath, p));
 
     const exclusions = patterns.filter(p => {
-      return !(p.indexOf('!node_modules') !== 0 || p === '!node_modules' || p === '!node_modules/**');
+      return !((p.indexOf('!node_modules') !== 0 && p.indexOf('!../node_modules') !== 0) || p === '!node_modules' || p === '!node_modules/**');
     });
 
     if (exclusions.length > 0) {
